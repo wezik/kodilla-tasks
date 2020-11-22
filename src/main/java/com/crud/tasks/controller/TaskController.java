@@ -26,12 +26,12 @@ public class TaskController {
 
     @GetMapping(value = "getTask")
     public TaskDto getTask(Long taskId) {
-        return new TaskDto(1L,"test title","Test_content");
+        Task task = dbService.getTask(taskId);
+        return taskMapper.mapToTaskDto(task);
     }
 
     @DeleteMapping(value = "deleteTask")
     public void deleteTask(Long taskId) {
-
     }
 
     @PostMapping(value = "updateTask")
