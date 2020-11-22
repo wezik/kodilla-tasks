@@ -25,22 +25,26 @@ public class TaskController {
     }
 
     @GetMapping(value = "getTask")
-    public TaskDto getTask(Long taskId) {
-        Task task = dbService.getTask(taskId);
-        return taskMapper.mapToTaskDto(task);
+    public TaskDto getTask(@RequestParam long taskId) throws TaskNotFoundException {
+        return taskMapper.mapToTaskDto(
+                dbService.getTask(taskId).orElseThrow(TaskNotFoundException::new)
+        );
     }
 
     @DeleteMapping(value = "deleteTask")
     public void deleteTask(Long taskId) {
     }
 
-    @PostMapping(value = "updateTask")
-    public TaskDto updateTask(TaskDto task) {
-        return new TaskDto(1L,"Edited test title","Test content");
+    @PutMapping(value = "updateTask")
+    public TaskDto updateTask(@RequestBody TaskDto taskDto) {
+        Task task = taskMapper.mapToTask(taskDto);
+        Task savedTask = dbService.saveTask(task);
+        return taskMapper.mapToTaskDto(savedTask);
     }
 
-    @PutMapping(value = "createTask")
-    public void createTask(TaskDto task) {
-
+    @PostMapping(value = "createTask")
+    public void createTask(@RequestBody TaskDto taskDto) {
+        Task task = taskMapper.mapToTask(taskDto);
+        dbService.saveTask(task);
     }
 }
