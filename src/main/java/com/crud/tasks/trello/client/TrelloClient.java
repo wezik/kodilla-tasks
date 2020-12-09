@@ -28,9 +28,9 @@ public class TrelloClient {
     @Value("${trello.app.user}")
     private String trelloUser;
 
-    public Optional<List<TrelloBoardDto>> getTrelloBoards() {
-        TrelloBoardDto[] boardsResponse = restTemplate.getForObject(buildUri(),TrelloBoardDto[].class);
-        return Optional.ofNullable(Arrays.asList(boardsResponse));
+    public List<TrelloBoardDto> getTrelloBoards() {
+        Optional<TrelloBoardDto[]> boardsResponse = Optional.ofNullable(restTemplate.getForObject(buildUri(),TrelloBoardDto[].class));
+        return boardsResponse.map(Arrays::asList).orElseGet(ArrayList::new);
     }
 
     private URI buildUri() {
