@@ -26,7 +26,7 @@ public class EmailScheduler {
                 Mail.builder()
                         .mailTo(adminConfig.getAdminMail())
                         .subject(SUBJECT)
-                        .message("Currenty in databse you got: "+size+" tasks")
+                        .message(size>1 ? "Currenty in databse you got: "+size+" tasks" : "Currenty in databse you got: "+size+" task")
                         .toCC(null)
                         .build()
         );
