@@ -33,6 +33,25 @@ public class SimpleEmailService {
         }
     }
 
+    public void sendScheduled(final Mail mail) {
+        log.info("Starting scheduled email preparation...");
+        try {
+            javaMailSender.send(createScheduledMimeMessage(mail));
+            log.info("Scheduled email has been sent");
+        } catch (MailException e) {
+            log.error("Failed to process scheduled email sending: " + e.getMessage(), e);
+        }
+    }
+
+    private MimeMessagePreparator createScheduledMimeMessage(final Mail mail) {
+        return mimeMessage -> {
+            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+            messageHelper.setTo(mail.getMailTo());
+            messageHelper.setSubject(mail.getSubject());
+            messageHelper.setText(mailCreatorService.buildScheduledEmail(mail.getMessage()), true);
+        };
+    }
+
     private MimeMessagePreparator createMimeMessage(final Mail mail) {
         return mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
